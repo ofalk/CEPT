@@ -10,8 +10,6 @@ use Getopt::Long;
 Getopt::Long::Configure($_) foreach qw/bundling auto_version auto_help/;
 
 my $config = LoadFile('CEPT.yml');
-use constant APPKEY	=> $config->{appkey};
-use constant APPID	=> $config->{appid};
 
 my($term1, $term2, $method);
 
@@ -25,8 +23,8 @@ my $result = GetOptions(
 );
 
 my $c = new CEPT({
-	appkey	=> APPKEY,
-	appid	=> APPID,
+	appkey	=> $config->{appkey},
+	appid	=> $config->{appid},
 	method	=> $method,
 	term1	=> $term1,
 	term2	=> $term2,
@@ -34,9 +32,15 @@ my $c = new CEPT({
 });
 $c->run();
 
-use Data::Dumper;
-
-print Dumper($c);
+if($c->{terms}) {
+	foreach(@{$c->{terms}}) {
+		if(ref $_ eq 'HASH') {
+			print "$_->{rank}: $_->{term} $_->{distance}\n";
+		} else {
+			print $_ . "\n";
+		}
+	}
+}
 
 1;
 
