@@ -27,8 +27,6 @@ our @EXPORT = qw();
 use constant DEFAULT_APIENDPOINT	=> 'http://api.cept.at/';
 use constant DEFAULT_APIVERSION		=> 'v1';
 
-use constant DEBUG => 1;
-
 our @methods = qw(similarterms similarterms-xl autocomplete term2bitmap bitmap2terms compare compare/img);
 
 sub new {
@@ -39,6 +37,8 @@ sub new {
 	$self->{ua} = LWP::UserAgent->new;
 	$self->{ua}->timeout(30);
 	$self->{ua}->env_proxy;
+
+	$self->{debug} = 1 if $args->{debug};
 
 	die "No method given" unless $args->{method};
 	$self->{method} = $args->{method};
@@ -94,16 +94,16 @@ sub run {
 				$terms = $ref->{completedTerms};
 			}
 			if($terms) {
-				carp scalar @{$terms} . " terms found. " if DEBUG;
+				carp scalar @{$terms} . " terms found. " if $self->{debug};
 				$self->{terms} = $terms;
 			} else {
-				carp "no terms found. " if DEBUG;
+				carp "no terms found. " if $self->{debug};
 			}
 		} else {
 			# skip
 		}
 	} else {
-		carp "$self->{url} returned an error" if DEBUG;
+		carp "$self->{url} returned an error" if $self->{debug};
 	}
 	return $self->{response};
 }
