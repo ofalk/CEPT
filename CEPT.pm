@@ -120,6 +120,22 @@ CEPT - CEPT API in Perl
 
   use CEPT;
 
+  use constant APPKEY     => 'someappkey'; # replace this
+  use constant APPID      => 'someappid';  # replace this
+
+  my $c = new CEPT({
+    appkey  => APPKEY,
+    appid   => APPID,
+    method  => 'autocomplete',
+    term1   => 'appl',
+    rows    => 10,
+  });
+  $c->run();
+
+  use Data::Dumper;
+
+  print Dumper($c);
+
 =head1 DESCRIPTION
 
 Access the CEPT API via Perl.
