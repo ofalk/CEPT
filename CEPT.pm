@@ -83,11 +83,14 @@ sub run {
 		unless($self->{method} =~ /image/) {
 			my $ref = decode_json($self->{response}->decoded_content);
 			my $terms;
+			if($ref->{similarterms}) {
+				if(@{$ref->{similarterms}}) {
+					$terms = $ref->{similarterms};
+				}
+			}
 			if($ref->{contexts}) {
 				if(@{$ref->{contexts}}) {
-					if(@{$ref->{contexts}}[0]) {
-						$terms = @{$ref->{contexts}}[0]->{similarterms};
-					}
+					$self->{contexts} = $ref->{contexts};
 				}
 			}
 			if($ref->{completedTerms}) {
